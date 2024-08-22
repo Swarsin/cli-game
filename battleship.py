@@ -45,3 +45,49 @@ class Battleship:
                 if column == "X":
                     hit_ships += 1
         return hit_ships
+
+# checks if already guessed the square
+def already_guessed():
+    if user_guess_board.board[user_x_row][user_y_column] == "-" or user_guess_board.board[user_x_row][user_y_column] == "X":
+        return True
+    return False    
+
+def Game():
+    computer_board = Board([[" "] * 8 for i in range(8)])
+    user_guess_board = Board([[" "] * 8 for i in range(8)])
+    Battleship.create_ships(computer_board)
+    turns = 10
+    while turns > 0:
+        Board.print_board(user_guess_board)
+        user_x_row, user_y_column = Battleship.enter(object)
+        
+        # checks if square has already been guessed
+        while (
+            user_guess_board.board[user_x_row][user_y_column] == "-"
+            or user_guess_board.board[user_x_row][user_y_column] == "X"
+        ):
+            print("Already guessed!")
+            user_x_row, user_y_column = Battleship.enter(object)
+        
+        #checks for hit or miss
+        if computer_board.board[user_x_row][user_y_column] == "X":
+            print("Hit!")
+            user_guess_board.board[user_x_row][user_y_column] = "X"
+        else:
+            print("Miss!")
+            user_guess_board.board[user_x_row][user_y_column] = "-"
+        
+        #checks for user win or loss
+        if Battleship.count_hit_ships(user_guess_board) == 5:
+            print("You hit all 5 battleships!")
+            break
+        else:
+            turns -= 1
+            print(f"You have {turns} turns remaining")
+            if turns == 0:
+                print("No more turns remaining")
+                Board.print_board(user_guess_board)
+                break
+
+Game()
+
